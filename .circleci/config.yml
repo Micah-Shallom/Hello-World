@@ -1,5 +1,9 @@
 version: 2.1
 
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.8.0
+
 commands:
   print_pipeline_id:
     description: 'command containing repeated steps for printing workflow id'
@@ -14,8 +18,7 @@ commands:
 jobs:
 
   print_workflow_id:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - print_pipeline_id
 
@@ -31,8 +34,7 @@ jobs:
             - "output.txt"
 
   print_output_file:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
@@ -41,8 +43,7 @@ jobs:
   
   #defining a job that intentionally contains an error
   error_job:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - run: 
           command: |
