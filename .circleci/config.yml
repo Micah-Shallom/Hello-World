@@ -1,7 +1,25 @@
 version: 2.1
-#new project;
+
+commands:
+  print_pipeline_id:
+    description: 'command containing repeated steps for printing workflow id'
+    parameters:
+      to:
+        type: string
+        default: "Workflow_id"
+    steps:
+        - run: echo $<< parameter.to >>
+
 
 jobs:
+
+  print_workflow_id:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - print_pipeline_id:
+          to: 'CIRCLE_WORKFLOW_ID'
+
   save_hello_world_output:
     docker:
       - image: circleci/node:13.8.0
@@ -24,6 +42,7 @@ jobs:
 workflows:
   new_workflow:
     jobs:
+      - print_workflow_id
       - save_hello_world_output
       - print_output_file:
           requires:
