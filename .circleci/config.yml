@@ -36,11 +36,26 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - run: ls ~/ 
       - run: cat ~/output.txt
+  
+  #defining a job that intentionally contains an error
+  error_job:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run : 
+        command: |
+          echo "Error On the build.............."
+          exit 125
+      - run: echo "This step ran because their was a failure on the job"
+          when: on_fail
+
 
 workflows:
   new_workflow:
     jobs:
+      - error_job
       - print_workflow_id
       - save_hello_world_output
       - print_output_file:
