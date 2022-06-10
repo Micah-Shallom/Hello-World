@@ -1,5 +1,5 @@
 version: 2.1
-#new project
+#new project;
 
 jobs:
   save_hello_world_output:
