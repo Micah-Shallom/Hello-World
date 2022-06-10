@@ -1,5 +1,9 @@
 version: 2.1
 
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.8.0
+
 commands:
   print_pipeline_id:
     description: 'command containing repeated steps for printing workflow id'
@@ -14,8 +18,7 @@ commands:
 jobs:
 
   print_workflow_id:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - print_pipeline_id
 
@@ -31,16 +34,30 @@ jobs:
             - "output.txt"
 
   print_output_file:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
+      - run: ls ~/ 
       - run: cat ~/output.txt
+  
+  #defining a job that intentionally contains an error
+  error_job:
+    <<: *defaults
+    steps:
+      - run: 
+          command: |
+            echo "Error On the build.............."
+            exit 125
+      - run: 
+          command: echo "This step ran because their was a failure on the job"
+          when: on_fail
+
 
 workflows:
   new_workflow:
     jobs:
+      - error_job
       - print_workflow_id
       - save_hello_world_output
       - print_output_file:
