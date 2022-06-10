@@ -49,7 +49,7 @@ jobs:
           echo "Error On the build.............."
           exit 125
       - run: echo "This step ran because their was a failure on the job"
-          when: on_fail
+        when: on_fail
 
 
 workflows:
